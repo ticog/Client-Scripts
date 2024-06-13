@@ -3,7 +3,7 @@ Start-Sleep 5
 import-module PSWindowsUpdate
 
 # Define the path to your script
-$scriptPath = "$env:HOMEPATH\Desktop\Client-Scripts\Test.ps1"
+$scriptPath = "$env:HOMEPATH\Desktop\Client-Scripts\WindowsReset.ps1"
 # Create a new scheduled task action
 $action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File `"$scriptPath`""
 # Create a new scheduled task trigger for logon
