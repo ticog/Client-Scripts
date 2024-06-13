@@ -7,7 +7,7 @@ $scriptPath = "C:\$env:HOMEPATH\Desktop\Client-Scripts\WindowsReset.ps1"
 # Create a new scheduled task action
 $action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File `"$scriptPath`""
 # Create a new scheduled task trigger for logon
-$trigger = New-ScheduledTaskTrigger -AtLogOn
+$trigger = New-ScheduledTaskTrigger -AtStartup
 # Define the principal (user) for whom the task will run
 $principal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccount -RunLevel Highest
 # Create the scheduled task
