@@ -13,12 +13,10 @@ $principal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccou
 # Create the scheduled task
 Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName "LogonScript" -Description "Run script at logon"
 
-$Update = (Get-WindowsUpdate -Title ".*23H2").KB
-
 if ($Update) {
     write-host "[+] 23H2 Update wurde gefunden`n" -ForegroundColor Green
     write-host "[+] Wird nun installiert...`n" -ForegroundColor Green
-    Install-WindowsUpdate -KBArticleID $Update -Hide -ForceInstall -AutoReboot
+    Install-WindowsUpdate -AcceptAll -ForceInstall -AutoReboot
 } else {
     continue
 }
