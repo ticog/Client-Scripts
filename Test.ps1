@@ -1,0 +1,1 @@
+Write-Output "blabla" > "$env:HOMEPATH\Desktop\test.txt"
