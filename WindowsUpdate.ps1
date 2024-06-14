@@ -13,7 +13,7 @@ $trigger = New-ScheduledTaskTrigger -AtStartup
 # Define the principal (user) for whom the task will run
 $principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
 # Create the scheduled task
-Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName "LogonScript" -Description "Run script at logon"
+Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName "AutoFactoryReset" -Description "At Startup The System will reset to Factory defaults"
 
 write-host "[+] Updates werden nun installiert...`n" -ForegroundColor Green
 Install-WindowsUpdate -AcceptAll -ForceInstall -AutoReboot
