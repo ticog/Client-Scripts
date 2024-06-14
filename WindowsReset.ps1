@@ -9,9 +9,7 @@
 
 # Aus Debug gründen, bevor ich mein eigenes Gerät komplett zurücksetze :)
 Clear-Host
-
 $seconds = 1
-
 while ($seconds -lt 6) {
     [console]::beep(1000, 100)
     Write-Host "[!] Du versuchst nun dieses Geraet zu reseten, du hast 5 Sekunden Zeit um abzubrechen (CTRL+C)...`n" -ForegroundColor Black -BackgroundColor Red
@@ -20,7 +18,6 @@ while ($seconds -lt 6) {
     Clear-Host
     $seconds += 1
 }
-
 $user = whoami.exe
 if ($user -like "*desktop-086t6ij\tico*") {
     exit 1

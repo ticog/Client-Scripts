@@ -1,1 +1,1 @@
-Write-Output "blabla" > "$env:HOMEPATH\Desktop\test.txt"
+Write-Output "blabla" > "C:\test.txt"

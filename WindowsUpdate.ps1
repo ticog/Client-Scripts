@@ -1,11 +1,18 @@
+Write-Host "[!] PSWindowsUpdate Modul wird installiert..." -ForegroundColor Yellow
 Install-Module PSWindowsUpdate -Force -Confirm:$false
-Start-Sleep 5
-import-module PSWindowsUpdate
+
+try {
+    Import-module PSWindowsUpdate -ErrorAction Stop
+    Write-Host "[!] PSWindowsupdate Modul wurde installiert" -ForegroundColor Green
+} catch {
+    write-Host "[!] PSWindowsUpdate Modul konnte nicht installiert werden" -ForegroundColor Red
+}
 
 New-Item -Path "C:\" -Name "Script" -ItemType Directory
-Copy-Item "WindowsReset.ps1" "C:\Script\WindowsReset.ps1" 
+Copy-Item "Test.ps1" "C:\Script\Test.ps1"
+
 # Define the path to your script
-$scriptPath = "C:\Script\WindowsReset.ps1"
+$scriptPath = "C:\Script\Test.ps1"
 # Create a new scheduled task action
 $action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File `"$scriptPath`""
 # Create a new scheduled task trigger for logon
@@ -18,4 +25,9 @@ Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -
 write-host "[+] Updates werden nun installiert...`n" -ForegroundColor Green
 Install-WindowsUpdate -AcceptAll -ForceInstall -AutoReboot
 
-Restart-Computer
+
+if ( $env:USERNAME -eq "tico") {
+    exit 1
+} else {
+    Restart-Computer
+}
