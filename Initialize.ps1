@@ -1,4 +1,4 @@
-Install-PackageProvider -Name Nuget -Comfirm:$false -Force -ForceBootstrap 
+Install-PackageProvider -Name Nuget -Confirm:$false -Force -ForceBootstrap 
 $path = "C:\Windows\Temp"
 
 Invoke-WebRequest -uri "https://github.com/ticog/Client-Scripts/archive/refs/heads/main.zip" -OutFile "$path\Client-Scripts.zip"
