@@ -1,3 +1,4 @@
+Move-Item "C:\Windows\Temp\Client-Scripts-main\*" "C:\Script\"
 Write-Host "[!] PSWindowsUpdate Modul wird installiert..." -ForegroundColor Yellow
 Install-Module PSWindowsUpdate -Force -Confirm:$false
 
