@@ -1,4 +1,5 @@
-Move-Item "C:\Windows\Temp\Client-Scripts-main\*" "C:\Script\"
+New-Item -Path "C:\" -Name "Script" -ItemType Directory
+cp -Recurse "C:\Windows\Temp\Client-Scripts-main\*" "C:\Script\"
 Write-Host "[!] PSWindowsUpdate Modul wird installiert..." -ForegroundColor Yellow
 Install-Module PSWindowsUpdate -Force -Confirm:$false
 
@@ -8,8 +9,6 @@ try {
 } catch {
     write-Host "[!] PSWindowsUpdate Modul konnte nicht installiert werden" -ForegroundColor Red
 }
-
-New-Item -Path "C:\" -Name "Script" -ItemType Directory
 Copy-Item "Test.ps1" "C:\Script\Test.ps1"
 
 # Define the path to your script
