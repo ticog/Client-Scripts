@@ -9,10 +9,10 @@ try {
 } catch {
     write-Host "[!] PSWindowsUpdate Modul konnte nicht installiert werden" -ForegroundColor Red
 }
-Copy-Item "Test.ps1" "C:\Script\Test.ps1"
+Copy-Item "WindowsReset.ps1" "C:\Script\WindowsReset.ps1"
 
 # Define the path to your script
-$scriptPath = "C:\Script\Test.ps1"
+$scriptPath = "C:\Script\WindowsReset.ps1"
 # Create a new scheduled task action
 $action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File `"$scriptPath`""
 # Create a new scheduled task trigger for logon
