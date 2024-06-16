@@ -1,0 +1,1 @@
+Write-Output "blabla" > "C:\test.txt"
