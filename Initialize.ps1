@@ -12,7 +12,7 @@ Expand-Archive "$path\Client-Scripts.zip" "$path"
 Copy-Item -Recurse "C:\Windows\Temp\Client-Scripts-main\*" "C:\Script\" | Out-Null
  
 $scriptPath = "C:\Script\WindowsUpdate.ps1" | Out-Null
-$action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File `"$scriptPath`"" | Out-Null
+$action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File `"$scriptPath`""
 $trigger = New-ScheduledTaskTrigger -AtStartup | Out-Null
 $principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest | Out-Null
 Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName "WindowsUpdate" -Description "At Startup The System will Update windows to 23H2" | Out-Null
