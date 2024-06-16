@@ -1,3 +1,6 @@
+# necessary registry keys to run "Invoke-WebRequest" without errors
+Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name 'IE5_UA_Backup_Flag' -Value 5
+Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name 'User Agent' -Value 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
 # Installiert winget, welches verwendet wird um Git zu installieren
 $path = "C:\Windows\Temp"
 $URL = "https://api.github.com/repos/microsoft/winget-cli/releases/latest"
