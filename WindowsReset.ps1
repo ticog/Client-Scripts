@@ -19,7 +19,7 @@ while ($seconds -lt 6) {
     $seconds += 1
 }
 $user = whoami.exe
-if ($user -like "*desktop-086t6ij\tico*") {
+if ($user -like "*tico*") {
     exit 1
 } elseif (-not (Get-ChildItem | findstr.exe "PSexec.exe")){
     write-host "[!] PSexec.exe ist nicht im gleichen Verzeichnis`nrtfm..." -ForegroundColor Red
