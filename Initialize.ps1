@@ -4,7 +4,7 @@ Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet
 # Installiert winget, welches verwendet wird um Git zu installieren
 $path = "C:\Windows\Temp"
 $URL = "https://api.github.com/repos/microsoft/winget-cli/releases/latest"
-$URL = (Invoke-WebRequest -Uri $URL).Content | ConvertFrom-Json |
+$URL = (Invoke-WebRequest -UseBasicParsing -Uri $URL).Content | ConvertFrom-Json |
         Select-Object -ExpandProperty "assets" |
         Where-Object "browser_download_url" -Match '.msixbundle' |
         Select-Object -ExpandProperty "browser_download_url"
