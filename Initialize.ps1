@@ -1,6 +1,7 @@
 # Um den Script beim Client zu starten, benutze dieser Oneliner: 
 # (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ticog/Client-Scripts/main/Initialize.ps1" -UseBasicParsing).Content | powershell -c -
-
+Set-executionpolicy Bypass
+Get-ExecutionPolicy
 New-Item -Path "C:\" -Name "Script" -ItemType Directory
 
 Install-PackageProvider -Name Nuget -Confirm:$false -Force -ForceBootstrap 
