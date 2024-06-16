@@ -23,3 +23,4 @@ Start-Process -FilePath "dism.exe" -ArgumentList "/online", "/add-package", "/pa
 
 Write-Host "[!] Es wird nun nach dem Neustart mit Windows Updates fortgefahren, bitte schalte das Geraet NICHT ab!" -ForegroundColor Green
 sleep 5
+Restart-Computer
