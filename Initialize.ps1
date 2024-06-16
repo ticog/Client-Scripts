@@ -21,4 +21,5 @@ Invoke-WebRequest -uri "https://catalog.sf.dl.delivery.mp.microsoft.com/filestre
 Start-Process -FilePath "dism.exe" -ArgumentList "/online", "/add-package", "/packagepath:C:\Windows\Temp\23H2.cab", "/NoRestart" -NoNewWindow -Wait
 
 
-Write-Host "[!] Es wird nun mit Windows Updates fortgefahren, bitte schalte das Geraet NICHT ab!" -ForegroundColor Green
+Write-Host "[!] Es wird nun nach dem Neustart mit Windows Updates fortgefahren, bitte schalte das Geraet NICHT ab!" -ForegroundColor Green
+sleep 5
