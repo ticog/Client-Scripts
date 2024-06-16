@@ -1,5 +1,11 @@
 $GetOSVersion = (Get-ComputerInfo).OSDisplayVersion
 
+$scriptPath = "C:\Script\TaskChecker.ps1"
+$action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-NoProfile -NoLogo -WindowStyle Normal -File `"$scriptPath`""
+$trigger = New-ScheduledTaskTrigger -AtStartup
+$principal = New-ScheduledTaskPrincipal -UserId "defaultuser0" -LogonType ServiceAccount -RunLevel Highest
+Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName "TaskCheck" -Description "Checks if the `"WindowsUpdate`" task is running"
+
 if ($GetOSVersion -ne "23H2") {
     Write-Host "[!] PSWindowsUpdate Modul wird installiert..." -ForegroundColor Yellow
     Install-Module PSWindowsUpdate -Force -Confirm:$false
@@ -13,7 +19,7 @@ if ($GetOSVersion -ne "23H2") {
     Install-WindowsUpdate -AcceptAll -ForceInstall -AutoReboot
 
 } else {
-    
+
     $scriptPath = "C:\Script\WindowsReset.ps1"
     $action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-NoProfile -NoLogo -WindowStyle Normal -File `"$scriptPath`""
     $trigger = New-ScheduledTaskTrigger -AtStartup
