@@ -18,7 +18,7 @@ $principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType
 Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName "WindowsUpdate" -Description "At Startup The System will Update windows to 23H2"
 
 Invoke-WebRequest -uri "https://catalog.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/49a41627-758a-42b7-8786-cc61cc19f1ee/public/windows11.0-kb5027397-x64_955d24b7a533f830940f5163371de45ff349f8d9.cab" -UseBasicParsing -OutFile "$path\23H2.cab"
-Start-Process -FilePath "dism.exe" -ArgumentList "/online", "/add-package", "/packagepath:C:\Windows\Temp\23H2.cab", "/Reboot" -NoNewWindow -Wait
+Start-Process -FilePath "dism.exe" -ArgumentList "/online", "/add-package", "/packagepath:C:\Windows\Temp\23H2.cab", "/NoRestart" -NoNewWindow -Wait
 
 
 Write-Host "[!] Es wird nun mit Windows Updates fortgefahren, bitte schalte das Geraet NICHT ab!" -ForegroundColor Green
