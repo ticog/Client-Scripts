@@ -9,14 +9,13 @@ try {
 }
 
 $scriptPath = "C:\Script\WindowsReset.ps1"
-$action = New-ScheduledTaskAction -NoProfile -NoLogo -WindowStyle Normal -Execute "Powershell.exe" -Argument "-File `"$scriptPath`""
+$action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-NoProfile -NoLogo -WindowStyle Normal -File `"$scriptPath`""
 $trigger = New-ScheduledTaskTrigger -AtStartup
 $principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
 Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName "AutoFactoryReset" -Description "At Startup The System will reset to Factory defaults"
 
 write-host "[+] Updates werden nun installiert...`n" -ForegroundColor Green
 Install-WindowsUpdate -AcceptAll -ForceInstall -AutoReboot
-
 
 if ( $env:USERNAME -eq "tico") {
     exit 1
