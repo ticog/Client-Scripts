@@ -1,5 +1,5 @@
 while ($true){
-    sleep 5
+    Start-Sleep 1
     if ((Get-ScheduledTask -TaskName WindowsUpdate).State){
         continue
         write-host "[+] WindowsUpdate Task is Running" -ForegroundColor Green
