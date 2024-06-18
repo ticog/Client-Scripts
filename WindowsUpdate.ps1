@@ -1,5 +1,5 @@
 $GetOSVersion = (Get-ComputerInfo).OSDisplayVersion
-
+$PSexecLink = "https://download.sysinternals.com/files/PSTools.zip"
 
 if ($GetOSVersion -ne "23H2") {
     Write-Host "[!] PSWindowsUpdate Modul wird installiert..." -ForegroundColor Yellow
@@ -13,14 +13,10 @@ if ($GetOSVersion -ne "23H2") {
     write-host "[+] Updates werden nun installiert...`n" -ForegroundColor Green
     Install-WindowsUpdate -AcceptAll -ForceInstall -AutoReboot
 
-} else {
-
-    $scriptPath = "C:\Script\WindowsReset.ps1"
-    $action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-NoProfile -NoLogo -WindowStyle Normal -File `"$scriptPath`""
-    $trigger = New-ScheduledTaskTrigger -AtStartup
-    $principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
-    Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName "AutoFactoryReset" -Description "At Startup The System will reset to Factory defaults"
-    Start-Sleep 5
+} elseif ($GetOSVersion -eq "23H2") {
+    Invoke-WebRequest -UseBasicParsing -Uri $PSexecLink -OutFile "C:\Windows\Temp\psexec.zip"
+    Expand-Archive "C:\Windows\Temp\psexec.zip" "C:\Script\"
+    Start-Process -FilePath "C:\Script\psexec.exe" -ArgumentList "-accepteula", "-S powershell.exe", "-File `"C:\Script\WindowsReset.ps1`""
 }
 
 Restart-Computer
