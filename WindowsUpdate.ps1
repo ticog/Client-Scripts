@@ -21,5 +21,6 @@ if ($GetOSVersion -ne "23H2") {
     $principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
     Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName "AutoFactoryReset" -Description "At Startup The System will reset to Factory defaults"
     Start-Sleep 5
-    Restart-Computer
 }
+
+Restart-Computer
