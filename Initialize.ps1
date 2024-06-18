@@ -14,12 +14,6 @@ Expand-Archive "$path\Client-Scripts.zip" "$path"
 
 Copy-Item -Recurse "C:\Windows\Temp\Client-Scripts-main\*" "C:\Script\" | Out-Null
 
-$scriptPath = "C:\Script\TaskChecker.ps1"
-$action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-NoProfile -NoLogo -WindowStyle Normal -File `"$scriptPath`""
-$trigger = New-ScheduledTaskTrigger -AtStartup
-$principal = New-ScheduledTaskPrincipal -UserId "defaultuser0" -LogonType ServiceAccount -RunLevel Highest
-Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName "TaskCheck" -Description "Checks if the `"WindowsUpdate`" task is running"
-
 $scriptPath = "C:\Script\WindowsUpdate.ps1"
 $action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File `"$scriptPath`""
 $trigger = New-ScheduledTaskTrigger -AtStartup

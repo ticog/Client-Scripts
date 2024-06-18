@@ -20,11 +20,6 @@ if ($GetOSVersion -ne "23H2") {
     $trigger = New-ScheduledTaskTrigger -AtStartup
     $principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
     Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName "AutoFactoryReset" -Description "At Startup The System will reset to Factory defaults"
-    
-    
-    if ( $env:USERNAME -eq "tico") {
-        exit 1
-    } else {
-        Restart-Computer
-    }
+    Start-Sleep 5
+    Restart-Computer
 }
