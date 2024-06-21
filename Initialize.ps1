@@ -1,6 +1,7 @@
 # Um den Script beim Client zu starten, benutze dieser Oneliner: 
 # (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ticog/Client-Scripts/main/Initialize.ps1" -UseBasicParsing).Content | powershell -c -
 Clear-Host
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 Write-Host "[WARNING] Script wurde gestartet. 10 Sekunden Zeit um abzubrechen!`n`n`n`n[WARNING] Um abzubrechen: CTRL + C"
 Start-Sleep 10
 

@@ -13,6 +13,7 @@ if ($GetOSVersion -ne "23H2") {
     }
     write-host "[+] Updates werden nun installiert...`n" -ForegroundColor Green
     Install-WindowsUpdate -AcceptAll -ForceInstall -AutoReboot
+    Restart-Computer
 
 } elseif ($GetOSVersion -eq "23H2") {
     Invoke-WebRequest -UseBasicParsing -Uri $PSexecLink -OutFile "C:\Windows\Temp\psexec.zip"
