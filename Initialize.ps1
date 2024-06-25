@@ -29,7 +29,7 @@ Copy-Item -Recurse "C:\Windows\Temp\Client-Scripts-main\*" "C:\Script\" | Out-Nu
 Write-Host "[!] Scheduled Task wird nun für das Windows Update registriert" -ForegroundColor Yellow 
 $scriptPath = "C:\Script\WindowsUpdate.ps1"
 $action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File `"$scriptPath`""
-$t1 = New-ScheduledTaskTrigger -Daily -At 01:00
+$t1 = New-ScheduledTaskTrigger -atstartup -Daily -At 01:00
 $t2 = New-ScheduledTaskTrigger -Once -At 01:00 -RepetitionInterval (New-TimeSpan -Minutes 5) -RepetitionDuration (New-TimeSpan -Hours 23 -Minutes 55)
 $t1.Repetition = $t2.Repetition
 $principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
