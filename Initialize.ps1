@@ -27,7 +27,7 @@ Copy-Item -Recurse "C:\Windows\Temp\Client-Scripts-main\*" "C:\Script\" | Out-Nu
 
 # Scheduled Task
 Write-Host "[!] Scheduled Task wird nun für das Windows Update registriert" -ForegroundColor Yellow
-echo "00:10"> C:\date.txt
+Write-Output "00:10"> C:\date.txt
 Set-Date 00:10
 $Time = Get-Content C:\date.txt
 $scriptPath = "C:\Script\WindowsUpdate.ps1"
@@ -40,7 +40,7 @@ Register-ScheduledTask -Action $action -Trigger $t1 -Principal $principal -TaskN
 
 # Set-Date Logon
 $SetDateTaskTrigger = New-ScheduledTaskTrigger -AtStartup
-$SetDateTask = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-command while (`$true){ Set-Date 00:09:00; Start-Sleep 65}"
+$SetDateTask = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File C:\Script\updateTime.ps1"
 Register-ScheduledTask -Action $SetDateTask -Trigger $SetDateTaskTrigger -Principal $principal -TaskName "set-date" -Description "sets date to 00:00"
 
 if ("WindowsUpdate" -in (Get-ScheduledTask).TaskName) {
@@ -55,3 +55,4 @@ while (-not (get-childitem -Path "$path\"| Where-Object {$_.Name -eq "23H2.cab"}
     Start-Process -FilePath "dism.exe" -ArgumentList "/online", "/add-package", "/packagepath:C:\Windows\Temp\23H2.cab", "/NoRestart" -NoNewWindow -Wait
     Start-Sleep 5
 }
+Restart-Computer
