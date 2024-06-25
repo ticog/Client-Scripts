@@ -1,1 +1,1 @@
-Set-Date 00:00
+while ($true){ Set-Date 00:09:00; Start-Sleep 65}

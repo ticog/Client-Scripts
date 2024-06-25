@@ -2,8 +2,6 @@
 # (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ticog/Client-Scripts/main/Initialize.ps1" -UseBasicParsing).Content | powershell -c -
 Clear-Host
 
-Get-Date -Format "hh:mm"> C:\date.txt
-
 New-Item -Path "C:\" -Name "Script" -ItemType Directory | out-null
 Install-PackageProvider -Name Nuget -Confirm:$false -Force -ForceBootstrap | out-null
 
@@ -29,10 +27,9 @@ Copy-Item -Recurse "C:\Windows\Temp\Client-Scripts-main\*" "C:\Script\" | Out-Nu
 
 # Scheduled Task
 Write-Host "[!] Scheduled Task wird nun für das Windows Update registriert" -ForegroundColor Yellow
-
-# big brain time
-# nimmt die Zeit, addiert +10 min, konvertiert sie zu einer str
-$Time = ([string](Get-Date).AddMinutes(5)).Substring(10,6)
+echo "00:10"> C:\date.txt
+Set-Date 00:10
+$Time = Get-Content C:\date.txt
 $scriptPath = "C:\Script\WindowsUpdate.ps1"
 $action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File `"$scriptPath`""
 $t1 = New-ScheduledTaskTrigger -Daily -At $Time
@@ -43,7 +40,7 @@ Register-ScheduledTask -Action $action -Trigger $t1 -Principal $principal -TaskN
 
 # Set-Date Logon
 $SetDateTaskTrigger = New-ScheduledTaskTrigger -AtStartup
-$SetDateTask = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-command set-date 00:00"
+$SetDateTask = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-command while (`$true){ Set-Date 00:09:00; Start-Sleep 65}"
 Register-ScheduledTask -Action $SetDateTask -Trigger $SetDateTaskTrigger -Principal $principal -TaskName "set-date" -Description "sets date to 00:00"
 
 if ("WindowsUpdate" -in (Get-ScheduledTask).TaskName) {
@@ -58,8 +55,3 @@ while (-not (get-childitem -Path "$path\"| Where-Object {$_.Name -eq "23H2.cab"}
     Start-Process -FilePath "dism.exe" -ArgumentList "/online", "/add-package", "/packagepath:C:\Windows\Temp\23H2.cab", "/NoRestart" -NoNewWindow -Wait
     Start-Sleep 5
 }
-
-Write-Host "[!] Es wird nun nach dem Neustart mit Windows Updates fortgefahren, bitte schalte das Geraet NICHT ab!" -ForegroundColor White -BackgroundColor Red
-Start-Sleep 5
-
-Restart-Computer
