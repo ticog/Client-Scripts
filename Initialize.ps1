@@ -2,26 +2,15 @@
 # (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ticog/Client-Scripts/main/Initialize.ps1" -UseBasicParsing).Content | powershell -c -
 Clear-Host
 
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-Write-Host "[WARNING] Script wurde gestartet. 10 Sekunden Zeit um abzubrechen!`n`n`n`n[WARNING] Um abzubrechen: CTRL + C"
-Start-Sleep 10
+New-Item -Path "C:\" -Name "Script" -ItemType Directory | out-null
+Install-PackageProvider -Name Nuget -Confirm:$false -Force -ForceBootstrap | out-null
 
-Set-executionpolicy Bypass
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+Set-executionpolicy Bypass -Confirm:$false -Force
 write-Host "[!] Execution Policy auf: $(Get-ExecutionPolicy)" -ForegroundColor Yellow
 (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ticog/Client-Scripts/main/AutoPilot.ps1" -UseBasicParsing).Content | powershell -c -
 write-Host "[!] AutoPilot.ps1 ausgeführt" -ForegroundColor Yellow
-
-
-$Internet, $null = Test-Connection -ComputerName "google.com" -ErrorAction Stop -Quiet
-
-if (-not $Internet){
-    write-Host "[!] Keine Internetverbindung`n[!] Stelle das Internet ein und fahre mit dem Script fohrt" -ForegroundColor Red
-} else {
-    continue
-}
-
-New-Item -Path "C:\" -Name "Script" -ItemType Directory | out-null
-Install-PackageProvider -Name Nuget -Confirm:$false -Force -ForceBootstrap | out-null
 
 if (((Get-PackageProvider) | ? {$_.Name -eq "NuGet"}).Name ){
     Write-Host "[+] NuGet PackageProvider ist installiert, Version: $(((Get-PackageProvider) | ? {$_.Name -eq "NuGet"}).Version -replace "", "")" -ForegroundColor Green
@@ -40,9 +29,10 @@ Copy-Item -Recurse "C:\Windows\Temp\Client-Scripts-main\*" "C:\Script\" | Out-Nu
 Write-Host "[!] Scheduled Task wird nun für das Windows Update registriert" -ForegroundColor Yellow 
 $scriptPath = "C:\Script\WindowsUpdate.ps1"
 $action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File `"$scriptPath`""
+$everytenmin = New-ScheduledTaskTrigger -Once -At "00:00" -RepetitionInterval (New-TimeSpan -Minutes 10) -RepetitionDuration ([timespan]::MaxValue)
 $trigger = New-ScheduledTaskTrigger -AtStartup
 $principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
-Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName "WindowsUpdate" -Description "At Startup The System will Update windows to 23H2"
+Register-ScheduledTask -Action $action -Trigger $trigger, $everytenmin -Principal $principal -TaskName "WindowsUpdate" -Description "At Startup The System will Update windows to 23H2"
 
 if ("WindowsUpdate" -in (Get-ScheduledTask).TaskName) {
     Write-Host "[+] Scheduled Task wurde erstellt" -ForegroundColor Green
@@ -52,7 +42,7 @@ Write-Host "[!] 23H2 Cab Datei wird eingespielt" -ForegroundColor Yellow
 
 # Cab File für 23H2
 while (-not (get-childitem -Path "$path\"| ? {$_.Name -eq "23H2.cab"})) {
-    Invoke-WebRequest -uri "https://catalog.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/49a41627-758a-42b7-8786-cc61cc19f1ee/public/windows11.0-kb5027397-x64_955d24b7a533f830940f5163371de45ff349f8d9.cab" -UseBasicParsing -OutFile "$path\23H2.cab"
+    start-process curl -ArgumentList "https://catalog.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/49a41627-758a-42b7-8786-cc61cc19f1ee/public/windows11.0-kb5027397-x64_955d24b7a533f830940f5163371de45ff349f8d9.cab" , "-o C:\Windows\Temp\23H2.cab" -wait -NoNewWindow
     Start-Process -FilePath "dism.exe" -ArgumentList "/online", "/add-package", "/packagepath:C:\Windows\Temp\23H2.cab", "/NoRestart" -NoNewWindow -Wait
     Start-Sleep 5
 }
