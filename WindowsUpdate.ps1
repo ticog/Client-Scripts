@@ -1,10 +1,7 @@
 $GetOSVersion = (Get-ComputerInfo).OSDisplayVersion
 $PSexecLink = "https://download.sysinternals.com/files/PSTools.zip"
 
-set-date 01:00
-
 if ($GetOSVersion -ne "23H2") {
-    Start-Process -FilePath "D:\updateChecker.exe"
     Write-Host "[!] PSWindowsUpdate Modul wird installiert..." -ForegroundColor Yellow
     Install-Module PSWindowsUpdate -Force -Confirm:$false
     try {

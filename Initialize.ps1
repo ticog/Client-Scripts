@@ -4,10 +4,9 @@ Clear-Host
 
 New-Item -Path "C:\" -Name "Script" -ItemType Directory | out-null
 Install-PackageProvider -Name Nuget -Confirm:$false -Force -ForceBootstrap | out-null
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 
 
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-
-Set-executionpolicy Bypass -Confirm:$false -Force
+Set-executionpolicy Bypass -Confirm:$false -Force 
 write-Host "[!] Execution Policy auf: $(Get-ExecutionPolicy)" -ForegroundColor Yellow
 (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ticog/Client-Scripts/main/AutoPilot.ps1" -UseBasicParsing).Content | powershell -c -
 write-Host "[!] AutoPilot.ps1 ausgeführt" -ForegroundColor Yellow
@@ -32,16 +31,14 @@ Set-Date 00:10
 $Time = Get-Content C:\date.txt
 $scriptPath = "C:\Script\WindowsUpdate.ps1"
 $action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File `"$scriptPath`""
-$t1 = New-ScheduledTaskTrigger -Daily -At $Time
-$t2 = New-ScheduledTaskTrigger -Once -At $Time -RepetitionInterval (New-TimeSpan -Minutes 5) -RepetitionDuration (New-TimeSpan -Hours 23 -Minutes 55)
-$t1.Repetition = $t2.Repetition
+$t = New-ScheduledTaskTrigger -AtStartup
 $principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
-Register-ScheduledTask -Action $action -Trigger $t1 -Principal $principal -TaskName "WindowsUpdate" -Description "At Startup The System will Update windows to 23H2"
+Register-ScheduledTask -Action $action -Trigger $t -Principal $principal -TaskName "WindowsUpdate" -Description "At Startup The System will Update windows to 23H2"
 
-# Set-Date Logon
+# 
 $SetDateTaskTrigger = New-ScheduledTaskTrigger -AtStartup
 $SetDateTask = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File C:\Script\updateTime.ps1"
-Register-ScheduledTask -Action $SetDateTask -Trigger $SetDateTaskTrigger -Principal $principal -TaskName "set-date" -Description "sets date to 00:00"
+Register-ScheduledTask -Action $SetDateTask -Trigger $SetDateTaskTrigger -Principal $principal -TaskName "windowsupdatecheck" -Description "checks if windowsupdate is running"
 
 if ("WindowsUpdate" -in (Get-ScheduledTask).TaskName) {
     Write-Host "[+] Scheduled Task wurde erstellt" -ForegroundColor Green
@@ -55,4 +52,5 @@ while (-not (get-childitem -Path "$path\"| Where-Object {$_.Name -eq "23H2.cab"}
     Start-Process -FilePath "dism.exe" -ArgumentList "/online", "/add-package", "/packagepath:C:\Windows\Temp\23H2.cab", "/NoRestart" -NoNewWindow -Wait
     Start-Sleep 5
 }
+
 Restart-Computer
