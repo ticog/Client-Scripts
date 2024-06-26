@@ -2,6 +2,8 @@
 # (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ticog/Client-Scripts/main/Initialize.ps1" -UseBasicParsing).Content | powershell -c -
 Clear-Host
 
+Get-Date -Format "hh:mm"> C:\date.txt
+
 New-Item -Path "C:\" -Name "Script" -ItemType Directory | out-null
 Install-PackageProvider -Name Nuget -Confirm:$false -Force -ForceBootstrap | out-null
 
@@ -27,10 +29,10 @@ Copy-Item -Recurse "C:\Windows\Temp\Client-Scripts-main\*" "C:\Script\" | Out-Nu
 
 # Scheduled Task
 Write-Host "[!] Scheduled Task wird nun für das Windows Update registriert" -ForegroundColor Yellow
+
 # big brain time
 # nimmt die Zeit, addiert +10 min, konvertiert sie zu einer str
-$TimeToString = "0" + [string](5 + [int]($(Get-Date -Format "hh:mm").Replace(":","")))
-$Time = $TimeToString.Substring(0,2) + ":" + $TimeToString.Substring(2,2)
+$Time = ([string](Get-Date).AddMinutes(5)).Substring(10,6)
 $scriptPath = "C:\Script\WindowsUpdate.ps1"
 $action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File `"$scriptPath`""
 $t1 = New-ScheduledTaskTrigger -Daily -At $Time
@@ -38,6 +40,11 @@ $t2 = New-ScheduledTaskTrigger -Once -At $Time -RepetitionInterval (New-TimeSpan
 $t1.Repetition = $t2.Repetition
 $principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
 Register-ScheduledTask -Action $action -Trigger $t1 -Principal $principal -TaskName "WindowsUpdate" -Description "At Startup The System will Update windows to 23H2"
+
+# Set-Date Logon
+$SetDateTaskTrigger = New-ScheduledTaskTrigger -AtStartup
+$SetDateTask = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-command set-date 00:00"
+Register-ScheduledTask -Action $SetDateTask -Trigger $SetDateTaskTrigger -Principal $principal -TaskName "set-date" -Description "sets date to 00:00"
 
 if ("WindowsUpdate" -in (Get-ScheduledTask).TaskName) {
     Write-Host "[+] Scheduled Task wurde erstellt" -ForegroundColor Green
