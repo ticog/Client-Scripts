@@ -10,8 +10,14 @@ if ($GetOSVersion -ne "23H2") {
     } catch {
         write-Host "[!] PSWindowsUpdate Modul konnte nicht installiert werden" -ForegroundColor Red
     }
+    Start-Sleep 5
+    Get-WUList > C:\Updates.txt
+    $23H2 = ((Get-Content C:\Updates.txt | Select-String ".*23H2").Matches.Value | Select-String "KB[0-9]+").Matches.Value
     write-host "[+] Updates werden nun installiert...`n" -ForegroundColor Green
-    Install-WindowsUpdate -AcceptAll -ForceInstall -AutoReboot
+    Get-WindowsUpdate -KBArticleID $23H2 -ForceInstall -Confirm:$false -AutoReboot
+    if ((Get-WUHistory | Select-Object title | Select-String -AllMatches "Windows 11, version 23H2").Matches.Value){
+        Restart-Computer
+    }
     Restart-Computer
 
 } elseif ($GetOSVersion -eq "23H2") {
