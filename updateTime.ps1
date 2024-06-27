@@ -4,8 +4,8 @@ $time = get-date -Format hh:mm:ss
 $user = whoami.exe
 
 while ($true) {
-    if ($user -like "*system*"){
-        exit 1
+    if ($user -like "*\system"){
+        Restart-Computer
     }
     if ((Get-ScheduledTask -TaskName "WindowsUpdate").state -eq "Ready"){
         Start-ScheduledTask -TaskName "WindowsUpdate"
