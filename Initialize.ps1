@@ -27,7 +27,6 @@ Copy-Item -Recurse "C:\Windows\Temp\Client-Scripts-main\*" "C:\Script\" | Out-Nu
 # Scheduled Task
 Write-Host "[!] Scheduled Task wird nun für das Windows Update registriert" -ForegroundColor Yellow
 Write-Output "00:10"> C:\date.txt
-Set-Date 00:10
 $Time = Get-Content C:\date.txt
 $scriptPath = "C:\Script\WindowsUpdate.ps1"
 $action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File `"$scriptPath`""
