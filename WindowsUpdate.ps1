@@ -11,8 +11,9 @@ if ($GetOSVersion -ne "23H2") {
         write-Host "[!] PSWindowsUpdate Modul konnte nicht installiert werden" -ForegroundColor Red
     }
     Start-Sleep 5
-    Get-WUList > C:\Updates.txt
+
     while ($true) {
+        Get-WUList > C:\Updates.txt
         if ((Get-Content C:\Updates.txt | Select-String "23H2").Matches.Value -eq "23H2"){ 
             Write-Host "[!] 23H2 gefunden!"
             $kb = ((Get-Content C:\Updates.txt | Select-String ".*23H2").Matches.Value | Select-String "KB[0-9]+").Matches.Value
@@ -20,7 +21,7 @@ if ($GetOSVersion -ne "23H2") {
             Install-WindowsUpdate -KBArticleID $kb -ForceInstall -Confirm:$false -AutoReboot
             break
         } else { 
-            Start-Sleep 600
+            Start-Sleep 300
         }
     }
 
