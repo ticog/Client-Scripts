@@ -1,6 +1,6 @@
 $GetOSVersion = (Get-ComputerInfo).OSDisplayVersion
 $PSexecLink = "https://download.sysinternals.com/files/PSTools.zip"
-
+Start-Transcript -Path C:\
 if ($GetOSVersion -ne "23H2") {
     Write-Host "[!] PSWindowsUpdate Modul wird installiert..." -ForegroundColor Yellow
     Install-Module PSWindowsUpdate -Force -Confirm:$false
@@ -26,6 +26,7 @@ if ($GetOSVersion -ne "23H2") {
 
     if ((Get-WUHistory | Select-Object title | Select-String -AllMatches "Windows 11, version 23H2").Matches.Value){
         Restart-Computer
+        Stop-Transcript
     } else {
         start-process powershell.exe -Argument "-Command `"[console]::beep(1000, 100)`""
     }
