@@ -16,13 +16,13 @@ if ($GetOSVersion -ne "23H2") {
         if ((Get-Content C:\Updates.txt | Select-String "23H2").Matches.Value -eq "23H2"){ 
             Write-Host "[!] 23H2 gefunden!"
             $kb = ((Get-Content C:\Updates.txt | Select-String ".*23H2").Matches.Value | Select-String "KB[0-9]+").Matches.Value
+            write-host "[+] Updates werden nun installiert...`n" -ForegroundColor Green
+            Install-WindowsUpdate -KBArticleID $kb -ForceInstall -Confirm:$false -AutoReboot
             break
         } else { 
             Start-Sleep 600
         }
     }
-    write-host "[+] Updates werden nun installiert...`n" -ForegroundColor Green
-    Install-WindowsUpdate -KBArticleID $kb -ForceInstall -Confirm:$false -AutoReboot
 
     if ((Get-WUHistory | Select-Object title | Select-String -AllMatches "Windows 11, version 23H2").Matches.Value){
         Restart-Computer
