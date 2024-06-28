@@ -1,6 +1,6 @@
 $GetOSVersion = (Get-ComputerInfo).OSDisplayVersion
 $PSexecLink = "https://download.sysinternals.com/files/PSTools.zip"
-Start-Transcript -Path C:\
+Start-Transcript -Path C:\WindowsUpdate.log
 if ($GetOSVersion -ne "23H2") {
     Write-Host "[!] PSWindowsUpdate Modul wird installiert..." -ForegroundColor Yellow
     Install-Module PSWindowsUpdate -Force -Confirm:$false
@@ -11,7 +11,13 @@ if ($GetOSVersion -ne "23H2") {
         write-Host "[!] PSWindowsUpdate Modul konnte nicht installiert werden" -ForegroundColor Red
     }
     Start-Sleep 5
-
+    Install-WindowsUpdate -AcceptAll -IgnoreReboot -Confirm:$false
+    
+    if ((Get-WURebootStatus -silent) -eq "True"){
+        Restart-Computer
+        Stop-Transcript
+    }
+    
     while ($true) {
         Get-WUList > C:\Updates.txt
         if ((Get-Content C:\Updates.txt | Select-String "23H2").Matches.Value -eq "23H2"){ 
