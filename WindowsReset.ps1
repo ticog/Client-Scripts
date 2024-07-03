@@ -1,10 +1,7 @@
 <#
- ____   _____  ____   _____  _____ 
-|  _ \ | ____|/ ___| | ____||_   _|
-| |_) ||  _|  \___ \ |  _|    | |  
-|  _ < | |___  ___) || |___   | |  
-|_| \_\|_____||____/ |_____|  |_|   
-
+Script:         WindowsReset.ps1
+Beschreibung:   Dieser Script automatisiert das updaten des Windows auf die version 23H2
+Autor:          Sebastian Mihut Masis
 #>
 
 # Aus Debug gründen, bevor ich mein eigenes Gerät komplett zurücksetze :)
